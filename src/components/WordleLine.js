@@ -3,13 +3,13 @@ import "./WordleLine.scss";
 
 const WORD_LENGTH = 5;
 
-function WordleLine({ guess, randomWord, isCurrentGuess }) {
+function WordleLine({ guess, searchedWord, isCurrentGuess }) {
   const tile = [];
   let letters = {};
 
   // Object with count of occurrences of each letter in the searched word
   if (!isCurrentGuess) {
-    letters = randomWord.split("").reduce(function (acc, curr) {
+    letters = searchedWord.split("").reduce(function (acc, curr) {
       return acc[curr] ? ++acc[curr] : (acc[curr] = 1), acc;
     }, {});
   }
@@ -18,7 +18,7 @@ function WordleLine({ guess, randomWord, isCurrentGuess }) {
   for (let i = 0; i < WORD_LENGTH; i++) {
     let elementStyles = `box box-${i} `;
     if (!isCurrentGuess) {
-      if (randomWord[i] === guess[i]) {
+      if (searchedWord[i] === guess[i]) {
         letters[guess[i]]--;
         if (letters[guess[i]] >= 0) {
           elementStyles += " green";
@@ -37,8 +37,8 @@ function WordleLine({ guess, randomWord, isCurrentGuess }) {
       let elementStyles = `box box-${i} `;
       if (!isCurrentGuess) {
         if (
-          randomWord[i] !== guess[i] &&
-          randomWord.split("").some((x) => x === guess[i])
+          searchedWord[i] !== guess[i] &&
+          searchedWord.split("").some((x) => x === guess[i])
         ) {
           letters[guess[i]]--;
           if (letters[guess[i]] >= 0) {

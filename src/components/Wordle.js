@@ -6,12 +6,12 @@ import { words } from "../data.js";
 function Wordle() {
   const [guesses, setGuesses] = useState(new Array(6).fill(""));
   const [currentGuess, setCurrentGuess] = useState("");
-  const [randomWord, setRandomWord] = useState("");
+  const [searchedWord, setSearchedWord] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
   const [iWin, setIWin] = useState(false);
 
   useEffect(() => {
-    getRandomWord();
+    getSearchedWord();
   }, []);
 
   const handleKeyPress = useCallback(
@@ -40,7 +40,7 @@ function Wordle() {
           const copy = [...guesses];
           copy[index] = currentGuess;
           setGuesses(copy);
-          if (currentGuess.toUpperCase() === randomWord) {
+          if (currentGuess.toUpperCase() === searchedWord) {
             setIsGameOver(true);
             setIWin(true);
           }
@@ -48,7 +48,7 @@ function Wordle() {
         }
       }
     },
-    [currentGuess, guesses, randomWord]
+    [currentGuess, guesses, searchedWord]
   );
 
   useEffect(() => {
@@ -57,9 +57,9 @@ function Wordle() {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [currentGuess, handleKeyPress]);
 
-  const getRandomWord = () => {
+  const getSearchedWord = () => {
     const rWord = words[Math.floor(Math.random() * words.length)];
-    setRandomWord(rWord);
+    setSearchedWord(rWord);
   };
 
   return (
@@ -67,7 +67,7 @@ function Wordle() {
       <div className="container">
         {isGameOver
           ? iWin
-            ? "YOU WIN"
+            ? "YOU WIN!!!"
             : "Game Over"
           : guesses.map((word, i) => {
               const isCurrentGuess =
@@ -75,7 +75,7 @@ function Wordle() {
               return (
                 <WordleLine
                   guess={isCurrentGuess ? currentGuess : word.toUpperCase()}
-                  randomWord={randomWord}
+                  searchedWord={searchedWord}
                   iscurrentGuess={isCurrentGuess}
                   key={i}
                 />
@@ -83,7 +83,7 @@ function Wordle() {
             })}
       </div>
 
-      <div>{randomWord}</div>
+      <div>{searchedWord}</div>
     </>
   );
 }
