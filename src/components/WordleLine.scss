@@ -1,0 +1,22 @@
+.line {
+  display: flex;
+  gap: 7px;
+}
+
+.line .box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  width: 55px;
+  height: 55px;
+  border: 2px solid white;
+
+  &.yellow {
+    background-color: rgb(182, 168, 45);
+  }
+
+  &.green {
+    background-color: green;
+  }
+}
