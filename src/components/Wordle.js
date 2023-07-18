@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./Wordle.scss";
 import WordleLine from "./WordleLine";
-
-const WORDS = ["ALBUM", "HINGE", "MONEY"];
+import { words } from "../data.js";
 
 function Wordle() {
   const [guesses, setGuesses] = useState(new Array(6).fill(""));
   const [currentGuess, setCurrentGuess] = useState("");
   const [randomWord, setRandomWord] = useState("");
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [iWin, setIWin] = useState(false);
 
   useEffect(() => {
     getRandomWord();
@@ -33,18 +34,21 @@ function Wordle() {
       ) {
         let index = guesses.findIndex((x) => x === "");
         if (index === 5) {
+          setIsGameOver(true);
           return;
         } else {
           const copy = [...guesses];
           copy[index] = currentGuess;
           setGuesses(copy);
+          if (currentGuess.toUpperCase() === randomWord) {
+            setIsGameOver(true);
+            setIWin(true);
+          }
           setCurrentGuess("");
         }
       }
-
-      console.log("Result: ", currentGuess);
     },
-    [currentGuess, guesses]
+    [currentGuess, guesses, randomWord]
   );
 
   useEffect(() => {
@@ -54,24 +58,29 @@ function Wordle() {
   }, [currentGuess, handleKeyPress]);
 
   const getRandomWord = () => {
-    const rWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+    const rWord = words[Math.floor(Math.random() * words.length)];
     setRandomWord(rWord);
   };
 
   return (
     <>
       <div className="container">
-        {guesses.map((word, i) => {
-          const isCurrentGuess = i === guesses.findIndex((val) => val === "");
-          return (
-            <WordleLine
-              guess={isCurrentGuess ? currentGuess : word.toUpperCase()}
-              randomWord={randomWord}
-              iscurrentGuess={isCurrentGuess}
-              key={i}
-            />
-          );
-        })}
+        {isGameOver
+          ? iWin
+            ? "YOU WIN"
+            : "Game Over"
+          : guesses.map((word, i) => {
+              const isCurrentGuess =
+                i === guesses.findIndex((val) => val === "");
+              return (
+                <WordleLine
+                  guess={isCurrentGuess ? currentGuess : word.toUpperCase()}
+                  randomWord={randomWord}
+                  iscurrentGuess={isCurrentGuess}
+                  key={i}
+                />
+              );
+            })}
       </div>
 
       <div>{randomWord}</div>
